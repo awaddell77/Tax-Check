@@ -1,8 +1,8 @@
 from dictionarify import *
 from Tax_conn import *
-
+import datetime
 class Tax_check(Tax_conn):
-	def __init__(self, fname):
+	def __init__(self, fname, curr_month):
 		super().__init__()
 		self.fname = fname
 		self._data = dictionarify(fname)
@@ -14,7 +14,7 @@ class Tax_check(Tax_conn):
 		change_lst = []
 		for i in range(0, len(self._data)):
 			query = "SELECT RATE, ID FROM {0} ".format(self.table)
-			self.cursor.execute(query+" WHERE ZIP = ? AND STATE = ?", (self._data[i]["Destination Zip"], self._data[i]["Destination State"]))
+			self.cursor.execute(query+" WHERE ZIP = ? AND STATE = ? AND MONTH = ? AND YEAR = ?", (self._data[i]["Destination Zip"], self._data[i]["Destination State"],self.__prev_month, self.__year))
 			resp = self.cursor.fetchall()
 			if not resp: raise RuntimeError("Could not find record")
 			elif len(resp) > 1: raise RuntimeError("Duplicates discovered for {0} and {1}".format(self._data["Destination Zip"], self._data["Destination State"]))

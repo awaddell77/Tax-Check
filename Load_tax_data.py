@@ -28,7 +28,7 @@ class Load_tax_data:
 
 		self.cursor.execute(t_query)
 		if not self.cursor.fetchall():
-			t_query = "CREATE TABLE {0} (ID INTEGER PRIMARY KEY AUTOINCREMENT, TAID INT(10) CITY CHAR(50), STATE CHAR(50), COUNTY CHAR(50), RATE FLOAT(53), ZIP INT(10), MONTH CHAR(9))".format(self.table) 
+			t_query = "CREATE TABLE IF NOT EXISTS {0} (TAID INT(10), CITY CHAR(50), STATE CHAR(50), COUNTY CHAR(50), RATE FLOAT(53), ZIP INT(10), MONTH CHAR(9), YEAR INT(10), PRIMARY KEY (CITY, ZIP, MONTH, YEAR)".format(self.table) 
 			self.cursor.execute(t_query)
 			t_query = ["CREATE INDEX ZipIndex ON {0}(ZIP)".format(self.table), "CREATE INDEX MonthIndex ON {0}(Month)".format(self.table)]#can't do this because of zip duplicates
 			for elem in t_query: self.cursor.execute(elem)
